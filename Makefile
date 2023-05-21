@@ -22,5 +22,8 @@ sqlc:
 test:
 	go test -v -cover ./...
 
-.PHONEY: postgres createdb dropdb migrate test sqlc
+server:
+	go run main.go
+
+.PHONEY: postgres createdb dropdb migrate test sqlc server
 
