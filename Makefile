@@ -16,8 +16,11 @@ migratedown:
 rec-sqlcc:
 	docker run --rm -v "%cd%:/src" -w /src kjconroy/sqlc generate
 
+sqlc:
+	sqlc generate
+
 test:
 	go test -v -cover ./...
 
-.PHONEY: postgres createdb dropdb migrate test
+.PHONEY: postgres createdb dropdb migrate test sqlc
 
