@@ -19,11 +19,14 @@ rec-sqlcc:
 sqlc:
 	sqlc generate
 
+mockgen:
+	mockgen -destination db/mock/store.go github.com/nodev918/simplebank/db/sqlc Store
+
 test:
 	go test -v -cover ./...
 
 server:
 	go run main.go
 
-.PHONEY: postgres createdb dropdb migrate test sqlc server
+.PHONEY: postgres createdb dropdb migrate test sqlc server mockgen
 
