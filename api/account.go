@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 
+	db "github.com/cbot918/simplebank/db/sqlc"
 	"github.com/gin-gonic/gin"
-	db "github.com/nodev918/simplebank/db/sqlc"
 )
 
 type createAccountRequest struct {

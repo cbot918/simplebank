@@ -20,7 +20,7 @@ sqlc:
 	sqlc generate
 
 mockgen:
-	mockgen -destination db/mock/store.go github.com/nodev918/simplebank/db/sqlc Store
+	mockgen -package mockdb -destination db/mock/store.go github.com/cbot918/simplebank/db/sqlc Store
 
 test:
 	go test -v -cover ./...
