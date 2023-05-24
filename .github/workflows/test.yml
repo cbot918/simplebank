@@ -2,7 +2,7 @@ name: Run unit tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "ft/ci-build-image" ]
 
 jobs:
 
@@ -26,7 +26,8 @@ jobs:
           - 5432:5432
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Check out code into go Go module directory
+      uses: actions/checkout@v3
 
     - name: Set up Go
       uses: actions/setup-go@v3
