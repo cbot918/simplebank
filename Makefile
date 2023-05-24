@@ -1,5 +1,5 @@
 postgres:
-	docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
+	docker run --name postgres12 --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
 
 createdb:
 	docker exec -it postgres12 createdb --username=root --owner=root simple_bank
@@ -37,5 +37,10 @@ test:
 server:
 	go run main.go
 
-.PHONEY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1
+dbuild:
+	docker build -t simplebank:latest .
 
+drun:
+	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres12:5432/simple_bank?sslmode=disable" simplebank:latest
+
+.PHONEY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1
