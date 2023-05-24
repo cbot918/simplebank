@@ -2,7 +2,9 @@ name: Run unit tests
 
 on:
   push:
-    branches: [ "ft/ci-build-image" ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
 
