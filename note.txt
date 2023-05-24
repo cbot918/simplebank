@@ -1,0 +1,6 @@
+AWS service
+
+EC2: App VM
+RDs: database
+ECR: image store
+Secrets Manager:  environment variables

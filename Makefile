@@ -43,4 +43,18 @@ dbuild:
 drun:
 	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres12:5432/simple_bank?sslmode=disable" simplebank:latest
 
+# random gen
+openrand:
+	openssl rand -hex 64 | head -c 32
+
+# aws ls    // ~/.aws
+aws-configure:
+	aws configure
+aws-get-secret:
+	aws secretsmanager get-secret-value --secret-id simple_bank
+aws-get-secret-text:
+	aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString --output text
+refresh-environment:
+	aws secretsmanager get-secret-value --secret-id simple_bank --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]' > app.env
+
 .PHONEY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1
