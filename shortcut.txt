@@ -1,0 +1,10 @@
+# k9s
+call panel: shift ; 
+- ns
+- services
+- nods
+- cj
+- configmap
+- quit
+
+d describe
