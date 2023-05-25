@@ -62,4 +62,14 @@ erc-password:
 ecr-login:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 301621304382.dkr.ecr.us-east-2.amazonaws.com
 
+
+
+# aws-eks
+kube-update-config:
+	aws eks update-kubeconfig --name simple-bank --region us-east-2
+kube-use-config:
+	kubectl use-context arn:aws:eks:us-east-2:301621304382:cluster/simple-bank
+kube-get-info:
+	kubectl cluster-info
+
 .PHONEY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1
