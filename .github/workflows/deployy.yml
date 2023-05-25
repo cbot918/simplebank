@@ -1,4 +1,4 @@
-name: Run unit tests
+name: Run Deploy
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
         with:
-          version: 'v1.27.2' # default is latest stable
+          version: 'v1.26.3' # default is latest stable
         id: install
 
       - name: Configure AWS credentials
