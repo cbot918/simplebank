@@ -25,23 +25,10 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          # role-to-assume: arn:aws:iam::123456789012:role/my-github-actions-role
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Apply aws-auth
-        run: |
-          kubectl apply -f eks/aws-auth.yaml
+          aws-region: us-east-2
       
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: us-east-2
-
-
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -58,9 +45,12 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t latest .
           docker push -a $REGISTRY/$REPOSITORY
 
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name simple-bank --region eu-west-1
 
       - name: Deploy image to Amazon EKS
         run: |
+          kubectl apply -f eks/aws-auth.yaml
           kubectl apply -f eks/deployment.yaml
           kubectl apply -f eks/service.yaml
           kubectl apply -f eks/issuer.yaml
