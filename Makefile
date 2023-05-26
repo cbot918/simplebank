@@ -90,4 +90,31 @@ dbml-install:
 dbml-gensql: #key script
 	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
 
-.PHONEY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1
+
+# protoc
+protoc-install:
+# install protoc
+	curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip
+	unzip protoc-3.15.8-linux-x86_64.zip -d $HOME/.local
+	export PATH="$PATH:$HOME/.local/bin"
+	sudo cp -rf ~/.local/include/google ~/.local/bin
+# install protoc-gen-go and protoc-gen-go-grpc
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+	protoc --version
+	protoc-gen-go --version
+	protoc-gen-go-grpc --version
+	export PATH="$PATH:$(go env GOPATH)/bin"
+
+proto:
+	rm -f pb/*.go
+	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative --go-grpc_out=pb --go-grpc_opt=paths=source_relative proto/*.proto
+
+# evans
+evans-install:
+	go install github.com/ktr0731/evans@latest
+
+evans:
+	evans --host localhost --port 9090 -r repl
+
+.PHONY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1 proto
