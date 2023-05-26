@@ -1,3 +1,5 @@
+DB_URL=postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable
+
 postgres:
 	docker run --name postgres12 --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
 
@@ -11,16 +13,16 @@ newmigrate:
 	migrate create -ext sql -dir db/migration -seq add_users
 
 migrateup:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
 migratedown:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "$(DB_URL)" -verbose down
 
 migrateup1:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up 1
+	migrate -path db/migration -database "$(DB_URL)" -verbose up 1
 
 migratedown1:
-	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "$(DB_URL)" -verbose down 1
 
 rec-sqlcc:
 	docker run --rm -v "%cd%:/src" -w /src kjconroy/sqlc generate
@@ -71,5 +73,21 @@ kube-use-config:
 	kubectl use-context arn:aws:eks:us-east-2:301621304382:cluster/simple-bank
 kube-get-info:
 	kubectl cluster-info
+
+
+# dbdocs dbml
+dbdocs-install:
+	npm i -g dbdocs
+dbdocs-login:
+	dbdocs login
+dbdocs-build: #key script
+	dbdocs build doc/db.dbml
+dbdocs-set-password:
+	dbdocs password --set 12345 --project BankingService
+dbml-install:
+	npm i -g @dbml/cli
+### dbml2sql << binary_name
+dbml-gensql: #key script
+	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
 
 .PHONEY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1
