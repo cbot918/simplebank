@@ -52,6 +52,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/o1egl/paseto v1.0.0
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
+	github.com/rakyll/statik v0.1.7
 	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.3
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
