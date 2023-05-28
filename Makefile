@@ -108,7 +108,11 @@ protoc-install:
 
 proto:
 	rm -f pb/*.go
-	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative --go-grpc_out=pb --go-grpc_opt=paths=source_relative proto/*.proto
+	protoc \
+	--proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+	--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
+	proto/*.proto 
 
 # evans
 evans-install:
@@ -117,4 +121,12 @@ evans-install:
 evans:
 	evans --host localhost --port 9090 -r repl
 
-.PHONY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1 proto
+# gRPC gateway : gg
+gg-install:
+	mkdir -p proto/google/api
+	curl -o proto/google/api/annotations.proto -OL https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/annotations.proto 
+	curl -o proto/google/api/field_behavior.proto -OL https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/field_behavior.proto 
+	curl -o proto/google/api/http.proto -OL https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/http.proto
+	curl -o proto/google/api/httpbody.proto -OL https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/httpbody.proto 
+
+.PHONY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1 proto gg-install
