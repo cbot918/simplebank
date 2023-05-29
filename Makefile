@@ -39,11 +39,16 @@ test:
 server:
 	go run main.go
 
+# docker
+
 dbuild:
 	docker build -t simplebank:latest .
 
 drun:
 	docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres12:5432/simple_bank?sslmode=disable" simplebank:latest
+
+dcup:
+	docker-compose up --build --force-recreate
 
 # random gen
 openrand:
