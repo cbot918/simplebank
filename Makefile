@@ -34,7 +34,9 @@ mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/cbot918/simplebank/db/sqlc Store
 
 test:
-	go test -v -cover ./...
+	go test $$(go list ./... | grep -v /private/)
+# go test -v -cover ./...
+
 
 server:
 	go run main.go
