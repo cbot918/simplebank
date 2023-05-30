@@ -139,4 +139,10 @@ gg-install:
 	curl -o proto/google/api/http.proto -OL https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/http.proto
 	curl -o proto/google/api/httpbody.proto -OL https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/httpbody.proto 
 
-.PHONY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1 proto gg-install
+# redis
+redis:
+	docker run --name redis -p 6379:6379 -d redis:7-alpine
+redis-ping:
+	docker exec -it redis redis-cli ping
+
+.PHONY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1 proto gg-install redis
