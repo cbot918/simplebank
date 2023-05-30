@@ -8,6 +8,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.15.2
 	github.com/hibiken/asynq v0.24.1
+	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/rs/zerolog v1.29.1
 	google.golang.org/api v0.108.0
 	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4

@@ -10,7 +10,7 @@ dropdb:
 	docker exec -it postgres12 dropdb simple_bank
 
 newmigrate:
-	migrate create -ext sql -dir db/migration -seq add_users
+	migrate create -ext sql -dir db/migration -seq $(name)
 
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
@@ -34,8 +34,8 @@ mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/cbot918/simplebank/db/sqlc Store
 
 test:
-	go test $$(go list ./... | grep -v /private/)
-# go test -v -cover ./...
+	go test -v -cover -short ./...
+# go test -v -cover -short $$(go list ./... | grep -v /private/)
 
 
 server:
@@ -94,7 +94,7 @@ dbdocs-set-password:
 dbml-install:
 	npm i -g @dbml/cli
 ### dbml2sql << binary_name
-dbml-gensql: #key script
+db_schema: #key script
 	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
 
 
