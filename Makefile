@@ -10,7 +10,7 @@ dropdb:
 	docker exec -it postgres12 dropdb simple_bank
 
 newmigrate:
-	migrate create -ext sql -dir db/migration -seq add_users
+	migrate create -ext sql -dir db/migration -seq $(name)
 
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
@@ -32,9 +32,12 @@ sqlc:
 
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/cbot918/simplebank/db/sqlc Store
+	mockgen -package mockwk -destination worker/mock/distributor.go github.com/cbot918/simplebank/worker TaskDistributor
 
 test:
-	go test -v -cover ./...
+	go test -v -cover -short ./...
+# go test -v -cover -short $$(go list ./... | grep -v /private/)
+
 
 server:
 	go run main.go
@@ -92,7 +95,7 @@ dbdocs-set-password:
 dbml-install:
 	npm i -g @dbml/cli
 ### dbml2sql << binary_name
-dbml-gensql: #key script
+db_schema: #key script
 	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
 
 
@@ -137,4 +140,10 @@ gg-install:
 	curl -o proto/google/api/http.proto -OL https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/http.proto
 	curl -o proto/google/api/httpbody.proto -OL https://raw.githubusercontent.com/googleapis/googleapis/master/google/api/httpbody.proto 
 
-.PHONY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1 proto gg-install
+# redis
+redis:
+	docker run --name redis -p 6379:6379 -d redis:7-alpine
+redis-ping:
+	docker exec -it redis redis-cli ping
+
+.PHONY: postgres createdb dropdb migrate test sqlc server mock newmigrate migrateup1 migratedown1 proto gg-install redis
